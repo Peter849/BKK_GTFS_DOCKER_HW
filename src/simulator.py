@@ -1,0 +1,37 @@
+import random
+import time
+from datetime import datetime, timezone
+
+class VehicleSimulator:
+    def __init__(self, client, stops, trips, stop_times):
+        self.client = client
+        self.stops = stops
+        self.trips = trips
+        self.stop_times = stop_times
+
+    def simulate_trip(self, trip_id, vehicle_id):
+        """
+        Simulate a trip for a specific vehicle.
+        """
+        trip_stops = self.stop_times[self.stop_times["trip_id"] == trip_id].copy()
+        trip_stops = trip_stops.sort_values(by="arrival_time")
+        trip_stops = trip_stops.merge(self.stops[["stop_id", "stop_lat", "stop_lon"]], on="stop_id", how="left")
+
+        print(f"\n🚍 Starting simulation for Vehicle ID: {vehicle_id}, Trip ID: {trip_id}, Total stops: {len(trip_stops)}\n")
+
+        for index, row in trip_stops.iterrows():
+            delay = random.randint(-2, 5)
+
+            # Calling the InfluxDB client
+            self.client.write_vehicle_data(
+                vehicle_id=vehicle_id,
+                trip_id=trip_id,
+                stop_id=row['stop_id'],
+                lat=row['stop_lat'],
+                lon=row['stop_lon'],
+                delay=delay
+            )
+
+            time.sleep(1)
+
+        print(f"✅ Simulation completed for Vehicle ID: {vehicle_id}\n")

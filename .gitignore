@@ -172,3 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Ignore the src/budapest_gtfs folder from version control (because it contains large files)
+/src/budapest_gtfs/
