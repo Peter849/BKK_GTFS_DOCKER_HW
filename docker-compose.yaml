@@ -29,6 +29,7 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./influxdb-datasource.yaml:/etc/grafana/provisioning/datasources/influxdb.yaml
     depends_on:
       - influxdb
     networks:

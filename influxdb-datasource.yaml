@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    uid: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      version: Flux
+      organization: myorg
+      defaultBucket: vehicles
+    secureJsonData:
+      token: mytoken
