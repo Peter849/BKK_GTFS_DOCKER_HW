@@ -1,14 +1,15 @@
 import threading
+import os
 
 from data_loader import load_gtfs_data
 from influxdb_wrapper import InfluxDBClientWrapper
 from simulator import VehicleSimulator
 
 # InfluxDB config
-INFLUX_URL = "http://influxdb:8086"
-INFLUX_TOKEN = "mytoken"
-INFLUX_ORG = "myorg"
-INFLUX_BUCKET = "vehicles"
+INFLUX_URL = os.getenv("INFLUX_URL", "http://localhost:8086")
+INFLUX_TOKEN = os.getenv("INFLUX_TOKEN", "mytoken")
+INFLUX_ORG = os.getenv("INFLUX_ORG", "myorg")
+INFLUX_BUCKET = os.getenv("INFLUX_BUCKET", "vehicles")
 
 # Number of trips to simulate
 NUMBER_OF_TRIPS = 5
