@@ -30,6 +30,10 @@ class VehicleSimulator:
         for index, row in trip_stops.iterrows():
             delay = random.randint(-2, 5)
 
+            # Random wait between 1 and 100 seconds
+            wait_time = random.randint(1, 100)
+            time.sleep(wait_time)
+
             # Calling the InfluxDB client
             self.client.write_vehicle_data(
                 vehicle_id=vehicle_id,
@@ -41,7 +45,5 @@ class VehicleSimulator:
                 stop_name=row.get("stop_name", None),
                 trip_name=trip_name
             )
-
-            time.sleep(1)
 
         print(f"✅ Simulation completed for Vehicle ID: {vehicle_id}\n")
