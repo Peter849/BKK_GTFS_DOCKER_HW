@@ -15,7 +15,15 @@ class VehicleSimulator:
         """
         trip_stops = self.stop_times[self.stop_times["trip_id"] == trip_id].copy()
         trip_stops = trip_stops.sort_values(by="arrival_time")
-        trip_stops = trip_stops.merge(self.stops[["stop_id", "stop_lat", "stop_lon"]], on="stop_id", how="left")
+        trip_stops = trip_stops.merge(self.stops[["stop_id", "stop_lat", "stop_lon", "stop_name"]], on="stop_id", how="left")
+
+        trip_name_row = self.trips[self.trips["trip_id"] == trip_id]
+        trip_name = None
+        if not trip_name_row.empty:
+            if "trip_headsign" in trip_name_row.columns:
+                trip_name = trip_name_row.iloc[0]["trip_headsign"]
+            elif "trip_short_name" in trip_name_row.columns:
+                trip_name = trip_name_row.iloc[0]["trip_short_name"]
 
         print(f"\n🚍 Starting simulation for Vehicle ID: {vehicle_id}, Trip ID: {trip_id}, Total stops: {len(trip_stops)}\n")
 
@@ -29,7 +37,9 @@ class VehicleSimulator:
                 stop_id=row['stop_id'],
                 lat=row['stop_lat'],
                 lon=row['stop_lon'],
-                delay=delay
+                delay=delay,
+                stop_name=row.get("stop_name", None),
+                trip_name=trip_name
             )
 
             time.sleep(1)

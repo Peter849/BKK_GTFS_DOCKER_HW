@@ -8,7 +8,7 @@ class InfluxDBClientWrapper:
         self.bucket = bucket
         self.org = org
 
-    def write_vehicle_data(self, vehicle_id, trip_id, stop_id, lat, lon, delay):
+    def write_vehicle_data(self, vehicle_id, trip_id, stop_id, lat, lon, delay, stop_name=None, trip_name=None):
         """
         Write data about a vehicle's location and delay to InfluxDB.
         """
@@ -20,18 +20,21 @@ class InfluxDBClientWrapper:
             .tag("vehicle_id", vehicle_id)
             .tag("trip_id", trip_id)
             .tag("stop_id", stop_id)
+            .field("trip_name", trip_name)
+            .field("stop_name", stop_name)
             .field("latitude", lat)
             .field("longitude", lon)
             .field("delay", delay)
             .time(current_datetime, WritePrecision.S)
         )
+
         try:
             self.write_api.write(bucket=self.bucket, org=self.org, record=point)
             
             log_message = f"""
             ✅ Measured VEHICLE LOCATION DATA for {vehicle_id} written to InfluxDB:
                 • Tags:    vehicle_id={vehicle_id}, trip_id={trip_id}, stop_id={stop_id}
-                • Fields:  lat={lat}, lon={lon}, delay={delay}
+                • Fields:  lat={lat}, lon={lon}, delay={delay}, stop_name={stop_name}, trip_name={trip_name}s
                 • Current time:    {current_datetime.isoformat()}
             """
             print(log_message)
