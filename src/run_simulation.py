@@ -55,8 +55,3 @@ result = influx_client.query_api().query(query)
 for table in result:
     for record in table.records:
         print(f"Time: {record.get_time()}, Vehicle ID: {record.get_value('vehicle_id')}")
-
-
-if RUN_Q:
-    # Query all vehicle data from the last 30 minutes
-    influx_client.query_recent_vehicle_data(time_range="-30m", field="delay")
